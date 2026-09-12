@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
-import {nanoid} from 'nanoid';
+
 dotenv.config();
 
-export const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/folder';
+export const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/tinyurl-clone';
 export const PORT = process.env.PORT || 5050;
-export const generateShortId = (lenght) => {
-    return nanoid(lenght);
-}   
+
+export const generateShortId = (length = 8) => {
+  return Math.random().toString(36).substring(2, 2 + length);
+};

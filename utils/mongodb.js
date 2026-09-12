@@ -1,11 +1,14 @@
 import mongoose from 'mongoose';
-import { MONGODB_URI } from './Keys.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tinyurl', 
+    );
     console.log('MongoDB connected');
   } catch (error) {
     console.error('MongoDB connection error:', error);
@@ -14,3 +17,4 @@ export const connectDB = async () => {
 };
 
 export default connectDB;
+

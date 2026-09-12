@@ -1,16 +1,24 @@
-import  mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
-const urlSchema = new mongoose.Schema({
+const urlSchema = new mongoose.Schema(
+  {
     shortId: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true,
     },
     longUrl: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-});
+    clicks: {
+      type: Number,
+      default: 0,
+    },
+  },
+  { timestamps: true }
+);
 
-export const Url = mongoose.model('URL', urlSchema);
+const Url = mongoose.models.Url || mongoose.model('Url', urlSchema);
+
 export default Url;
