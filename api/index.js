@@ -2,6 +2,9 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import dns from 'dns';
+
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 dotenv.config();
 
@@ -12,9 +15,9 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-if (process.env.MONGO_URI) {
+if (process.env.MONGODB_URI) {
   mongoose
-    .connect(process.env.MONGO_URI)
+    .connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB connected successfully'))
     .catch((err) => console.error('MongoDB connection error:', err));
 }
@@ -46,19 +49,29 @@ app.post('/api/shorten', async (req, res) => {
         return res.status(400).json({ error: 'Custom alias already in use' });
       }
     } else {
-      // Import nanoid dynamically if needed or generate a random fallback string
       const { nanoid } = await import('nanoid');
       shortId = nanoid(6);
     }
 
-    const newUrl = new Url({ longUrl, shortId });
+    // Standardize URL protocol if missing
+    let formattedLongUrl = longUrl.trim();
+    if (!/^https?:\/\//i.test(formattedLongUrl)) {
+      formattedLongUrl = `https://${formattedLongUrl}`;
+    }
+
+    const newUrl = new Url({ longUrl: formattedLongUrl, shortId });
     await newUrl.save();
 
-    const origin = req.headers.origin || `https://${req.headers.host}`;
+    const host = req.get('host');
+    const protocol = req.protocol;
+    const shortUrl = `${protocol}://${host}/${shortId}`;
+
     return res.status(201).json({
-      longUrl,
+      longUrl: formattedLongUrl,
       shortId,
-      shortUrl: `${origin}/${shortId}`,
+      shortUrl,
+      clicks: 0,
+      date: newUrl.date,
     });
   } catch (err) {
     console.error('Error shortening URL:', err);
@@ -81,6 +94,10 @@ app.get('/api/urls', async (req, res) => {
 app.get('/:shortId', async (req, res) => {
   try {
     const { shortId } = req.params;
+
+    // Ignore requests for favicon
+    if (shortId === 'favicon.ico') return res.status(204).end();
+
     const url = await Url.findOne({ shortId });
 
     if (url) {
@@ -96,13 +113,10 @@ app.get('/:shortId', async (req, res) => {
   }
 });
 
-// Local Development Server Listener
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 5050;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
+// Server Listener
+const PORT = process.env.PORT || 5050;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
-// Export app for Vercel Serverless Function
-module.export = app;
+export default app; 
