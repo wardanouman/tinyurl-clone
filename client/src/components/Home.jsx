@@ -21,7 +21,7 @@ export default function Home({ onAddLink }) {
     try {
       const formattedUrl = longUrl.trim();
 
-      const response = await fetch('/api/shorten', {
+      const response = await fetch('/api/shorten', ... {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -51,13 +51,13 @@ export default function Home({ onAddLink }) {
 
   const handleCopy = () => {
     if (!recentLink) return;
-    const urlToCopy = recentLink.shortUrl || `http://localhost:5050/${recentLink.shortId}`;
+    const urlToCopy = recentLink.shortUrl || `${window.location.origin}/${recentLink.shortId}`;
     navigator.clipboard.writeText(urlToCopy);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const shortUrl = recentLink ? (recentLink.shortUrl || `http://localhost:5050/${recentLink.shortId}`) : '';
+  const shortUrl = recentLink ? (recentLink.shortUrl || `${window.location.origin}/${recentLink.shortId}`) : '';
 
   return (
     // Top of Home.jsx JSX return:
