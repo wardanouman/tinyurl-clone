@@ -15,8 +15,16 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)", 
-      "destination": "/index.js"
+      "src": "/api/shorten",
+      "dest": "index.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "index.js"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "client/dist/assets/$1"
     },
     {
       "src": "/([^/.]+)",
@@ -24,7 +32,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "client/$1"
+      "dest": "client/index.html"
     }
   ]
 }
