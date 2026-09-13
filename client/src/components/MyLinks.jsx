@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-// Replace with your actual Railway backend URL
 const API_BASE_URL = 'https://tinyurl-clone-production.up.railway.app';
 
 const MyLinks = () => {
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch all saved URLs from the backend
   useEffect(() => {
     fetchLinks();
   }, []);
@@ -24,7 +22,6 @@ const MyLinks = () => {
     }
   };
 
-  // Delete a specific link by its ID
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this link?')) return;
 
@@ -34,10 +31,9 @@ const MyLinks = () => {
       });
 
       if (response.ok) {
-        // Filter out the deleted link from local state to refresh the UI instantly
         setLinks((prevLinks) => prevLinks.filter((link) => link._id !== id));
       } else {
-        alert('Failed to delete the link. Please try again.');
+        alert('Failed to delete the link.');
       }
     } catch (error) {
       console.error('Error deleting link:', error);
@@ -53,55 +49,58 @@ const MyLinks = () => {
         <p>No shortened links found.</p>
       ) : (
         <div className="links-list">
-          {links.map((link) => (
-            <div key={link._id} className="link-card">
-              <div className="link-info">
-                <a
-                  href={`${API_BASE_URL}/${link.shortCode}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="short-url"
-                >
-                  {`${API_BASE_URL}/${link.shortCode}`}
-                </a>
-                <p className="original-url">{link.originalUrl}</p>
+          {links.map((link) => {
+            // Using shortId and longUrl matching your Mongoose Schema
+            const fullShortUrl = `${API_BASE_URL}/${link.shortId}`;
+
+            return (
+              <div key={link._id} className="link-card">
+                <div className="link-info">
+                  <a
+                    href={fullShortUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="short-url"
+                  >
+                    {fullShortUrl}
+                  </a>
+                  <p className="original-url">{link.longUrl}</p>
+                </div>
+
+                <div className="link-actions">
+                  {/* Copy Button */}
+                  <button
+                    onClick={() => navigator.clipboard.writeText(fullShortUrl)}
+                    className="action-btn copy-btn"
+                    title="Copy Link"
+                  >
+                    📋
+                  </button>
+
+                  {/* Open Link Button */}
+                  <a
+                    href={fullShortUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="action-btn open-btn"
+                    title="Open Link"
+                  >
+                    🔗
+                  </a>
+
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => handleDelete(link._id)}
+                    className="action-btn delete-btn"
+                    title="Delete Link"
+                    style={{ color: '#ff4d4f', cursor: 'pointer' }}
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
-
-              <div className="link-actions">
-                {/* Copy Button */}
-                <button
-                  onClick={() =>
-                    navigator.clipboard.writeText(`${API_BASE_URL}/${link.shortCode}`)
-                  }
-                  className="action-btn copy-btn"
-                  title="Copy Link"
-                >
-                  📋
-                </button>
-
-                {/* External Link Button */}
-                <a
-                  href={`${API_BASE_URL}/${link.shortCode}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="action-btn open-btn"
-                  title="Open Link"
-                >
-                  🔗
-                </a>
-
-                {/* Delete Button */}
-                <button
-                  onClick={() => handleDelete(link._id)}
-                  className="action-btn delete-btn"
-                  title="Delete Link"
-                  style={{ color: '#ff4d4f', cursor: 'pointer' }}
-                >
-                  🗑️
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
