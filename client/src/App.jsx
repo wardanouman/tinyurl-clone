@@ -6,8 +6,8 @@ import QRCodeGen from './components/QRCodeGen';
 import ApiDocs from './components/ApiDocs';
 import { Link2, LayoutDashboard, BarChart2, QrCode, Code2 } from 'lucide-react';
 
-// Change 5000 to whatever port your Node backend runs on (e.g., 5000 or 8000)
-const API_BASE_URL = 'http://localhost:5050';
+
+const API_BASE_URL = 'https://tinyurl-clone-production.up.railway.app';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');

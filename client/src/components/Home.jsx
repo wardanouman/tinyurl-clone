@@ -5,7 +5,7 @@ import {
   BarChart3, ShieldCheck, Zap, ArrowRight, User, Lock 
 } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5050';
+const API_BASE_URL = 'https://tinyurl-clone-production.up.railway.app';
 
 export default function Home({ onAddLink }) {
   const [longUrl, setLongUrl] = useState('');
