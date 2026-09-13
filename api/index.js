@@ -113,6 +113,19 @@ app.get('/:shortId', async (req, res) => {
   }
 });
 
+// Delete a URL by its short ID or MongoDB _id
+app.delete('/api/urls/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    // If using short code: await Url.findOneAndDelete({ shortCode: id });
+    // If using MongoDB _id:
+    await Url.findByIdAndDelete(id);
+    res.status(200).json({ message: 'URL deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete URL' });
+  }
+});
+
 // Server Listener
 const PORT = process.env.PORT || 5050;
 app.listen(PORT, () => {
