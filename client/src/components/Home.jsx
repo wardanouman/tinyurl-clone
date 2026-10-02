@@ -22,6 +22,7 @@ export default function Home({ onAddLink }) {
 
     setLoading(true);
     try {
+      console.log(API_BASE_URL);
       const formattedUrl = longUrl.trim();
 
       const response = await fetch(`${API_BASE_URL}/api/shorten`, {
