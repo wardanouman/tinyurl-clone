@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE_URL = 'https://tinyurl-clone-production.up.railway.app'; // Update this to your backend URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const MyLinks = () => {
   const [links, setLinks] = useState([]);

@@ -5,7 +5,7 @@ import {
   BarChart3, ShieldCheck, Zap, ArrowRight, User, Lock 
 } from 'lucide-react';
 
-const API_BASE_URL = 'https://tinyurl-clone-production.up.railway.app'; // Update this to your backend URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
 export default function Home({ onAddLink }) {
