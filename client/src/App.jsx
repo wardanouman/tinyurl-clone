@@ -7,7 +7,7 @@ import ApiDocs from './components/ApiDocs';
 import { Link2, LayoutDashboard, BarChart2, QrCode, Code2 } from 'lucide-react';
 
 
-const API_BASE_URL = 'https://tinyurl-clone-production.up.railway.app';
+const API_BASE_URL = 'https://tinyurl-clone-production.up.railway.app'; // Update this to your backend URL
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
